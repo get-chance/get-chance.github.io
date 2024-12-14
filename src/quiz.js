@@ -82,7 +82,7 @@ function endQuiz() {
     <button onclick="restartQuiz()">다시 시작</button>
     <br>
     <br>
-    <a href="hometown.html"> 홈타운으로 돌아가기</a>
+    <a href="../index.html"> 홈타운으로 돌아가기</a>
   `);
 
   const container = document.getElementById("user-answers-container");
