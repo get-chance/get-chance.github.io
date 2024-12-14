@@ -1,0 +1,10 @@
+.swiper { /* swiper 크기 지정 */
+    width: 1000px;
+    height: 600px;
+}
+
+.swiper-slide img { /* 이미지를 부모 크기에 맞추기 위함 */
+    display:block;
+	width:100%;
+    height:auto;
+}
