@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Caesar Cipher</title>
+</head>
+<body>
+    <h1>Caesar Cipher Encryption</h1>
+    <form action="caesar_cipher.php" method="POST">
+        <label for="shift">키(이동 수) :</label>
+        <input type="number" id="shift" name="shift" required>
+        <br><br>
+        <label for="plaintext">평문 입력 :</label>
+        <textarea id="plaintext" name="plaintext" rows="4" cols="50" required></textarea>
+        <br><br>
+        <button type="submit">암호화</button>
+    </form>
+</body>
+</html>
