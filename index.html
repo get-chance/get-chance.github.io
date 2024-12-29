@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,6 +8,7 @@
     <link rel="stylesheet" href="style.css">
     <script src="index.js"></script>
 </head>
+
 <body>
     <div id="header">
         <div id="container">
@@ -23,52 +25,103 @@
             <iframe id="popup-iframe" src="./popup/AddnDeleteStock.html"></iframe>
         </div>
     </div>
-    
+
     <!-- 7개(오늘 포함) : 오늘 기준 전 2일, 후 4일 -->
     <!-- 상세 보기 클릭시 캘린더를 띠우고, 선택시 캘린더를 닫고 해당 날짜에 대한 내용 출력 -->
     <section class="stock-info">
         <h1>증시 정보를 한눈에</h1>
-        <div class="box-container">
-            <div class="info-box" onclick="handleBoxClick('1')">
-                <span class="date">1</span>
-                <span class="number">1000</span>
+        <div id="panel">
+            <div id="up-down" style="display: none;">
+                <button class="panel-control" onClick="up()">up</button>
+                <button class="panel-control" onClick="reset()">reset</button>
+                <button class="panel-control" onClick="down()">down</button>
             </div>
-            <div class="info-box" onclick="handleBoxClick('2')">
-                <span class="date">2</span>
-                <span class="number">2000</span>
-            </div>
-            <div class="info-box" onclick="handleBoxClick('3')">
-                <span class="date">3</span>
-                <span class="number">3000</span>
-            </div>
-            <div class="info-box" onclick="handleBoxClick('4')">
-                <span class="date">4</span>
-                <span class="number">4000</span>
-            </div>
-            <div class="info-box" onclick="handleBoxClick('5')">
-                <span class="date">5</span>
-                <span class="number">5000</span>
-            </div>
-            <div class="info-box" onclick="handleBoxClick('6')">
-                <span class="date">6</span>
-                <span class="number">6000</span>
-            </div>
-            <div class="info-box" onclick="handleBoxClick('7')">
-                <span class="date">7</span>
-                <span class="number">7000</span>
+            <div id="box-container">
+                <div id="box-row0" class="box-row" style="display: none; order: 0">
+                </div>
+                <div id="box-row1" class="box-row" style="display: flex; order: 1">
+                    <!-- 예시 -->
+                    <div class="info-box" onclick="handleBoxClick('1')">
+                        <span class="date">1</span>
+                        <span class="number">1000</span>
+                    </div>
+                </div>
+                <div id="box-row2" class="box-row" style="display: none; order: 2">
+                </div>
             </div>
         </div>
-        <button class="details-button" onclick="showDetails()">월별 캘린더 보기</button>
+        <button id="details-button" class="details-button" onclick="toggleDetails()">월별 캘린더 보기</button>
     </section>
 
     <script>
-        function handleBoxClick(date) {
-            alert(`${date}일의 상세 정보를 확인하세요.`);
+        let isExpanded = false;
+        const initial = new Map();
+        let order = new Array(3);
+
+        for (let i = 0; i < 3; i++) {
+            order[i] = document.getElementById("box-row" + i);
         }
 
-        function showDetails() {
-            alert('월별 캘린더 상세보기로 이동합니다.');
+
+        // 초기화: 이번 주 표시
+        function initWeekBoxes() {
+            const nextDate = new Date(); // 현재 날짜 가져오기
+            nextDate.setDate(nextDate.getDate() - 8); // 현재 날짜에서 7일 빼기
+
+            for (let i = 0; i < 3; i++) {
+                let row = document.getElementById('box-row' + i);
+                row.innerHTML= '';
+
+                for (let j = 0; j < 7; j++) {
+                    nextDate.setDate(nextDate.getDate() + 1); // i일 후의 날짜 계산
+
+                    let month = nextDate.getMonth() + 1;
+                    let day = nextDate.getDate();
+                    
+                    initial.set(`${month}/${day}`, day * 1000);
+
+                    const box = createBox(month, day, day * 1000);
+                    row.appendChild(box);
+                }
+            }
         }
+
+        // 박스 생성 함수
+        function createBox(month, day, value) {
+            const box = document.createElement('div');
+            box.className = 'info-box';
+            box.onclick = () => handleBoxClick(day);
+            box.innerHTML = `<span class="date">${month}/${day}</span><span class="number">${value}</span>`;
+            return box;
+        }
+
+        function toggleDetails() {
+            if (!isExpanded) {
+                document.getElementById('box-row0').style.display = 'flex';
+                document.getElementById('box-row2').style.display = 'flex';
+                document.getElementById('up-down').style.display = 'flex';
+            } else {
+                document.getElementById('box-row0').style.display = 'none';
+                document.getElementById('box-row2').style.display = 'none';
+                document.getElementById('up-down').style.display = 'none';
+            }
+
+            isExpanded = !isExpanded;
+        }
+
+        function up() {
+            let temp = order[2];
+            order[1].style.order = 2;
+            order[2] = order[1];
+            order[0].style.order = 1;
+            order[1] = order[0];
+            temp.style.order = 0;
+            order[0] = temp;
+        }
+
+        // 페이지 로딩 후 DOMContentLoaded 이벤트에 따라 함수 호출
+        document.addEventListener('DOMContentLoaded', initWeekBoxes);
     </script>
 </body>
+
 </html>

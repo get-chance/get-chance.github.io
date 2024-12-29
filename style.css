@@ -82,11 +82,30 @@ h1 {
     color: #333;
 }
 
-.box-container {
+#panel {
     display: flex;
+    align-items: stretch;
     justify-content: center;
     gap: 10px;
-    margin-bottom: 20px;
+}
+
+#up-down {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+#box-container {
+    display: flex; /* 세로로 박스를 쌓을 수 있도록 flex 설정 */
+    flex-direction: column;   /* 여러 줄이 세로로 쌓이게 설정 */
+    gap: 10px;
+}
+
+.box-row {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
 }
 
 .info-box {
@@ -134,4 +153,22 @@ h1 {
 .details-button:hover {
     background-color: #218838;
     transform: scale(1.05);
+}
+
+.panel-control {
+    padding: 10px 10px;
+    font-size: 15px;
+    background-color: #28a745;
+    color: white;
+    border-radius: 5px;
+}
+
+.panel-control:hover {
+    background-color: #218838;
+    transform: scale(1.05);
+}
+
+.highlight {
+    background-color: #FFC107; /* 이번 주 강조 색 */
+    color: #333;
 }
