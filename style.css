@@ -70,3 +70,68 @@ button {
     height: 100%;
     border: none;
 }
+
+/**/
+.stock-info {
+    text-align: center;
+}
+
+h1 {
+    margin-bottom: 20px;
+    font-size: 24px;
+    color: #333;
+}
+
+.box-container {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.info-box {
+    width: 80px;
+    height: 100px;
+    background-color: #007BFF;
+    color: white;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: transform 0.2s, background-color 0.2s;
+}
+
+.info-box:hover {
+    transform: scale(1.1);
+    background-color: #0056b3;
+}
+
+.info-box .date {
+    align-self: flex-start;
+    margin-left: 10px;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+.info-box .number {
+    font-size: 20px;
+    font-weight: bold;
+}
+
+.details-button {
+    padding: 10px 20px;
+    font-size: 16px;
+    color: white;
+    background-color: #28a745;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.2s, transform 0.2s;
+}
+
+.details-button:hover {
+    background-color: #218838;
+    transform: scale(1.05);
+}

@@ -26,6 +26,49 @@
     
     <!-- 7개(오늘 포함) : 오늘 기준 전 2일, 후 4일 -->
     <!-- 상세 보기 클릭시 캘린더를 띠우고, 선택시 캘린더를 닫고 해당 날짜에 대한 내용 출력 -->
+    <section class="stock-info">
+        <h1>증시 정보를 한눈에</h1>
+        <div class="box-container">
+            <div class="info-box" onclick="handleBoxClick('1')">
+                <span class="date">1</span>
+                <span class="number">1000</span>
+            </div>
+            <div class="info-box" onclick="handleBoxClick('2')">
+                <span class="date">2</span>
+                <span class="number">2000</span>
+            </div>
+            <div class="info-box" onclick="handleBoxClick('3')">
+                <span class="date">3</span>
+                <span class="number">3000</span>
+            </div>
+            <div class="info-box" onclick="handleBoxClick('4')">
+                <span class="date">4</span>
+                <span class="number">4000</span>
+            </div>
+            <div class="info-box" onclick="handleBoxClick('5')">
+                <span class="date">5</span>
+                <span class="number">5000</span>
+            </div>
+            <div class="info-box" onclick="handleBoxClick('6')">
+                <span class="date">6</span>
+                <span class="number">6000</span>
+            </div>
+            <div class="info-box" onclick="handleBoxClick('7')">
+                <span class="date">7</span>
+                <span class="number">7000</span>
+            </div>
+        </div>
+        <button class="details-button" onclick="showDetails()">월별 캘린더 보기</button>
+    </section>
 
+    <script>
+        function handleBoxClick(date) {
+            alert(`${date}일의 상세 정보를 확인하세요.`);
+        }
+
+        function showDetails() {
+            alert('월별 캘린더 상세보기로 이동합니다.');
+        }
+    </script>
 </body>
 </html>
