@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="index.js"></script>
+</head>
+<body>
+    <div id="header">
+        <div id="container">
+            <span id="app_name">미래의 머니</span>
+            <a id="add_companies_to_favorites" onClick="openPopupForAddnDelete()">
+                <img src="./resource/button-add-svgrepo-com.svg">
+            </a>
+        </div>
+    </div>
+
+    <div id="popup-AddnDeleteStock" style="display:none;">
+        <div id="popup-container">
+            <button id="popup-close" onclick="closePopupForAddnDelete()">x</button>
+            <iframe id="popup-iframe" src="./popup/AddnDeleteStock.html"></iframe>
+        </div>
+    </div>
+    
+    <!-- 7개(오늘 포함) : 오늘 기준 전 2일, 후 4일 -->
+    <!-- 상세 보기 클릭시 캘린더를 띠우고, 선택시 캘린더를 닫고 해당 날짜에 대한 내용 출력 -->
+
+</body>
+</html>
