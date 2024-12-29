@@ -24,7 +24,8 @@ h2 {
     border-radius: 25px; /* 둥근 모서리 */
     padding: 10px 20px;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* 살짝 그림자 */
-    width: 400px; /* 검색창 너비 */
+    width: 80%;
+    max-width: 400px; /* 검색창 너비 */
 }
 
 /* 검색 아이콘 스타일 */
