@@ -50,7 +50,8 @@
                 </div>
             </div>
         </div>
-        <button id="details-button" class="details-button" onclick="toggleDetails()">월별 캘린더 보기</button>
+        <button id="details-button" class="details-button" onclick="toggleDetails()" style="order: 3">더 많이 보기</button>
+        
     </section>
 
     <script>
@@ -112,11 +113,19 @@
             if (!isExpanded) {
                 order[0].style.display = 'flex';
                 order[2].style.display = 'flex';
-                document.getElementById('up-down').style.display = 'flex';
+                let upDown = document.getElementById('up-down');
+                upDown.style.display = 'flex';
+                upDown.style.width = '10%';
+                document.getElementById('box-container').style.width = "90%";
+                detailsButton = document.getElementById('details-button');
+                detailsButton.style.width = "90%";
+                detailsButton.textContent = '간단히 보기'
+
             } else {
                 order[0].style.display = 'none';
                 order[2].style.display = 'none';
                 document.getElementById('up-down').style.display = 'none';
+                document.getElementById('details-button').textContent = '더 많이 보기'
             }
 
             isExpanded = !isExpanded;
@@ -279,18 +288,17 @@
                         let result = iterator.next().value;
                         console.log(result);
 
-                        tokens = result[0].split('/');
+                        let tokens = result[0].split('/');
                         dateSpan.textContent = result[0];
                         numberSpan.textContent = result[1];
+                        console.log(tokens[0], tokens[1]);
 
-                        infoBox.onclick = () => handleBoxClick(standardDate.getFullYear(), tokens[0], tokens[1]);
+                        infoBox.onclick = () => handleBoxClick(standardDate.getFullYear(), tokens[0], tokens[1]);//(standardDate.getFullYear(), tokens[0], tokens[1]);
                     }
                 });
             }
 
-            
-
-            infoBoxes = order[1].querySelectorAll('.info-box');
+            let infoBoxes = order[1].querySelectorAll('.info-box');
             infoBoxes[0].classList.add('highlight');
 
             upButton = document.getElementById("up");
