@@ -32,9 +32,9 @@
         <h1>증시 정보를 한눈에</h1>
         <div id="panel">
             <div id="up-down" style="display: none;">
-                <button class="panel-control" onClick="up()">up</button>
+                <button id="up" class="panel-control" onClick="up()">up</button>
                 <button class="panel-control" onClick="reset()">reset</button>
-                <button class="panel-control" onClick="down()">down</button>
+                <button id="down" class="panel-control" onClick="down()">down</button>
             </div>
             <div id="box-container">
                 <div id="box-row0" class="box-row" style="display: none; order: 0">
@@ -57,6 +57,10 @@
         let isExpanded = false;
         const initial = new Map();
         let order = new Array(3);
+        let standardDate = new Date(); // 현재 날짜 가져오기
+        const standardIndex = 8;
+        const maxIndex = 16;
+        let index = standardIndex;
 
         for (let i = 0; i < 3; i++) {
             order[i] = document.getElementById("box-row" + i);
@@ -65,44 +69,53 @@
 
         // 초기화: 이번 주 표시
         function initWeekBoxes() {
-            const nextDate = new Date(); // 현재 날짜 가져오기
+            const nextDate = new Date(standardDate);
             nextDate.setDate(nextDate.getDate() - 8); // 현재 날짜에서 7일 빼기
 
             for (let i = 0; i < 3; i++) {
                 let row = document.getElementById('box-row' + i);
-                row.innerHTML= '';
+                row.innerHTML = '';
 
                 for (let j = 0; j < 7; j++) {
-                    nextDate.setDate(nextDate.getDate() + 1); // i일 후의 날짜 계산
+                    nextDate.setDate(nextDate.getDate() + 1); // 1일 후의 날짜 계산
 
                     let month = nextDate.getMonth() + 1;
                     let day = nextDate.getDate();
-                    
+
                     initial.set(`${month}/${day}`, day * 1000);
 
-                    const box = createBox(month, day, day * 1000);
+                    const box = createBox(nextDate.getFullYear(), month, day, day * 1000);
                     row.appendChild(box);
                 }
             }
+
+            infoBoxes = document.getElementById('box-row1').querySelectorAll('.info-box');
+            infoBoxes[0].classList.add('highlight');
         }
 
         // 박스 생성 함수
-        function createBox(month, day, value) {
+        function createBox(year, month, day, value) {
             const box = document.createElement('div');
             box.className = 'info-box';
-            box.onclick = () => handleBoxClick(day);
-            box.innerHTML = `<span class="date">${month}/${day}</span><span class="number">${value}</span>`;
+            box.onclick = () => handleBoxClick(year, month, day);
+            box.innerHTML = `<span class="date">${month}/${day}</span> <span class="number">${value}</span>`;
             return box;
         }
 
+        function handleBoxClick(year, month, day) {
+            alert(`${year}년 ${month}월 ${day}일 을 선택하셨습니다`);
+        }
+
         function toggleDetails() {
+            reset();
+
             if (!isExpanded) {
-                document.getElementById('box-row0').style.display = 'flex';
-                document.getElementById('box-row2').style.display = 'flex';
+                order[0].style.display = 'flex';
+                order[2].style.display = 'flex';
                 document.getElementById('up-down').style.display = 'flex';
             } else {
-                document.getElementById('box-row0').style.display = 'none';
-                document.getElementById('box-row2').style.display = 'none';
+                order[0].style.display = 'none';
+                order[2].style.display = 'none';
                 document.getElementById('up-down').style.display = 'none';
             }
 
@@ -117,6 +130,176 @@
             order[1] = order[0];
             temp.style.order = 0;
             order[0] = temp;
+
+            index--;
+
+            if (index == 9) {
+                let infoBoxes = document.getElementById('box-row1').querySelectorAll('.info-box');
+                infoBoxes[0].classList.add('highlight');
+            }
+
+            if (index == 6) {
+                let infoBoxes = document.getElementById('box-row1').querySelectorAll('.info-box');
+                infoBoxes[0].classList.remove('highlight');
+            }
+
+            if (index < maxIndex) {
+                upButton = document.getElementById("down");
+                upButton.onclick = down;
+                upButton.style.backgroundColor = '#28a745';
+            }
+
+            temp = index - standardIndex;
+            console.log(temp);
+
+            let date = new Date(standardDate);
+            date.setDate(date.getDate() + 7 * (temp - 1) - 1)
+            console.log(date.getDate());
+
+            // box-row 안의 모든 info-box 요소를 선택
+            const infoBoxes = order[0].querySelectorAll('.info-box');
+
+            // info-box를 순회하며 작업 수행
+            infoBoxes.forEach((infoBox, index) => {
+                // date와 number 값 가져오기
+                const dateSpan = infoBox.querySelector('.date');
+                const numberSpan = infoBox.querySelector('.number');
+
+                if (dateSpan && numberSpan) {
+                    // 값 변경 예시
+                    date.setDate(date.getDate() + 1); // i일 후의 날짜 계산
+
+                    let month = date.getMonth() + 1;
+                    let day = date.getDate();
+
+                    dateSpan.textContent = `${month}/${day}`;
+                    numberSpan.textContent = day * 1000;
+
+                    infoBox.onclick = () => handleBoxClick(date.getFullYear(), month, day);
+                }
+            });
+
+            if (index == 0) {
+                upButton = document.getElementById("up");
+                upButton.onclick = null;
+                upButton.style.backgroundColor = 'gray';
+            }
+        }
+
+        function down() {
+            index++;
+
+            if (index == 7) {
+                let infoBoxes = document.getElementById('box-row1').querySelectorAll('.info-box');
+                infoBoxes[0].classList.add('highlight');
+            }
+
+            if (index == 10) {
+                let infoBoxes = document.getElementById('box-row1').querySelectorAll('.info-box');
+                infoBoxes[0].classList.remove('highlight');
+                console.log("checked")
+            }
+
+            let temp = order[0];
+            order[1].style.order = 0;
+            order[0] = order[1];
+            order[2].style.order = 1;
+            order[1] = order[2];
+            temp.style.order = 2;
+            order[2] = temp;
+
+
+
+            if (index > 0) {
+                upButton = document.getElementById("up");
+                upButton.onclick = up;
+                upButton.style.backgroundColor = '#28a745';
+            }
+
+            temp = index - standardIndex;
+            console.log(temp);
+
+            let date = new Date(standardDate);
+            date.setDate(date.getDate() + 7 * (temp + 1) - 1);
+
+            // box-row 안의 모든 info-box 요소를 선택
+            const infoBoxes = order[2].querySelectorAll('.info-box');
+
+            // info-box를 순회하며 작업 수행
+            infoBoxes.forEach((infoBox, index) => {
+                // date와 number 값 가져오기
+                const dateSpan = infoBox.querySelector('.date');
+                const numberSpan = infoBox.querySelector('.number');
+
+                if (dateSpan && numberSpan) {
+                    // 값 변경 예시
+                    date.setDate(date.getDate() + 1); // i일 후의 날짜 계산
+
+                    let month = date.getMonth() + 1;
+                    let day = date.getDate();
+
+                    dateSpan.textContent = `${month}/${day}`;
+                    numberSpan.textContent = day * 1000;
+
+                    infoBox.onclick = () => handleBoxClick(date.getFullYear(), month, day);
+                }
+            });
+
+            if (index == maxIndex) {
+                upButton = document.getElementById("down");
+                upButton.onclick = null;
+                upButton.style.backgroundColor = 'gray';
+            }
+        }
+
+        function reset() {
+            if (index == standardIndex) return;
+
+            index = standardIndex;
+
+            ////
+            for (let i = 0; i < 3; i++) {
+                order[i] = document.getElementById("box-row" + i);
+                order[i].style.order = i;
+            }
+
+            const iterator = initial.entries(); // Map의 이터레이터 생성
+
+            for (let i = 0; i < 3; i++) {
+                const infoBoxes = order[i].querySelectorAll('.info-box');
+
+                // info-box를 순회하며 작업 수행
+                infoBoxes.forEach((infoBox, index) => {
+                    // date와 number 값 가져오기
+                    const dateSpan = infoBox.querySelector('.date');
+                    const numberSpan = infoBox.querySelector('.number');
+
+                    if (dateSpan && numberSpan) {
+                        // 값 변경 예시
+                        let result = iterator.next().value;
+                        console.log(result);
+
+                        tokens = result[0].split('/');
+                        dateSpan.textContent = result[0];
+                        numberSpan.textContent = result[1];
+
+                        infoBox.onclick = () => handleBoxClick(standardDate.getFullYear(), tokens[0], tokens[1]);
+                    }
+                });
+            }
+
+            
+
+            infoBoxes = order[1].querySelectorAll('.info-box');
+            infoBoxes[0].classList.add('highlight');
+
+            upButton = document.getElementById("up");
+            upButton.onclick = up;
+            upButton.style.backgroundColor = '#28a745';
+
+            upButton = document.getElementById("down");
+            upButton.onclick = down;
+            upButton.style.backgroundColor = '#28a745';
         }
 
         // 페이지 로딩 후 DOMContentLoaded 이벤트에 따라 함수 호출

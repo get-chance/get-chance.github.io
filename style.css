@@ -104,7 +104,6 @@ h1 {
 .box-row {
     display: flex;
     flex-wrap: wrap;
-    justify-content: center;
     gap: 10px;
 }
 
@@ -119,7 +118,7 @@ h1 {
     justify-content: center;
     border-radius: 5px;
     cursor: pointer;
-    transition: transform 0.2s, background-color 0.2s;
+    /* transition: transform 0.2s, background-color 0.2s; */
 }
 
 .info-box:hover {
