@@ -135,7 +135,7 @@
 
                     let text = (day > 20) ? `99+건` : `${day}건`;
 
-                    const box = createBox(year, month, day, window.innerWidth);
+                    const box = createBox(year, month, day, window.devicePixelRatio);
                     row.appendChild(box);
                 }
 
