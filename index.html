@@ -30,28 +30,30 @@
     <!-- 상세 보기 클릭시 캘린더를 띠우고, 선택시 캘린더를 닫고 해당 날짜에 대한 내용 출력 -->
     <section class="stock-info">
         <h1>증시 정보를 한눈에</h1>
-        <div id="panel">
-            <div id="up-down" style="display: none;">
-                <button id="up" class="panel-control" onClick="up()">up</button>
-                <button class="panel-control" onClick="reset()">reset</button>
-                <button id="down" class="panel-control" onClick="down()">down</button>
-            </div>
-            <div id="box-container">
-                <div id="box-row0" class="box-row" style="display: none; order: 0">
+        <div id="align">
+            <div id="panel">
+                <div id="up-down" style="display: none;">
+                    <button id="up" class="panel-control" onClick="up()">up</button>
+                    <button class="panel-control" onClick="reset()">reset</button>
+                    <button id="down" class="panel-control" onClick="down()">down</button>
                 </div>
-                <div id="box-row1" class="box-row" style="display: flex; order: 1">
-                    <!-- 예시 -->
-                    <div class="info-box" onclick="handleBoxClick('1')">
-                        <span class="date">1</span>
-                        <span class="number">1000</span>
+                <div id="box-container">
+                    <div id="box-row0" class="box-row" style="display: none; order: 0">
+                    </div>
+                    <div id="box-row1" class="box-row" style="display: flex; order: 1">
+                        <!-- 예시 -->
+                        <div class="info-box" onclick="handleBoxClick('1')">
+                            <span class="date">1</span>
+                            <span class="number">1000</span>
+                        </div>
+                    </div>
+                    <div id="box-row2" class="box-row" style="display: none; order: 2">
                     </div>
                 </div>
-                <div id="box-row2" class="box-row" style="display: none; order: 2">
-                </div>
             </div>
+            <button id="details-button" class="details-button" onclick="toggleDetails()" style="order: 3">더 많이
+                보기</button>
         </div>
-        <button id="details-button" class="details-button" onclick="toggleDetails()" style="order: 3">더 많이 보기</button>
-        
     </section>
 
     <script>
@@ -80,12 +82,13 @@
                 for (let j = 0; j < 7; j++) {
                     nextDate.setDate(nextDate.getDate() + 1); // 1일 후의 날짜 계산
 
+                    let year = nextDate.getFullYear();
                     let month = nextDate.getMonth() + 1;
                     let day = nextDate.getDate();
 
-                    initial.set(`${month}/${day}`, day * 1000);
+                    initial.set(`${year}/${month}/${day}`, day * 1000);
 
-                    const box = createBox(nextDate.getFullYear(), month, day, day * 1000);
+                    const box = createBox(year, month, day, day * 1000);
                     row.appendChild(box);
                 }
             }
@@ -116,16 +119,21 @@
                 let upDown = document.getElementById('up-down');
                 upDown.style.display = 'flex';
                 upDown.style.width = '10%';
-                document.getElementById('box-container').style.width = "90%";
+                document.getElementById('box-container').style.width = "88%";
                 detailsButton = document.getElementById('details-button');
-                detailsButton.style.width = "90%";
+                detailsButton.style.width = "88%";
                 detailsButton.textContent = '간단히 보기'
 
             } else {
                 order[0].style.display = 'none';
                 order[2].style.display = 'none';
-                document.getElementById('up-down').style.display = 'none';
-                document.getElementById('details-button').textContent = '더 많이 보기'
+                let upDown = document.getElementById('up-down');
+                upDown.style.display = 'none';
+                upDown.style.width = '0%';
+                document.getElementById('box-container').style.width = "100%";
+                detailsButton = document.getElementById('details-button');
+                detailsButton.style.width = "100%";
+                detailsButton.textContent = '간단히 보기'
             }
 
             isExpanded = !isExpanded;
@@ -178,13 +186,14 @@
                     // 값 변경 예시
                     date.setDate(date.getDate() + 1); // i일 후의 날짜 계산
 
+                    let year = date.getFullYear(); // handleBoxClick에 직접 입력시 12/31이 2025년으로 출력되는 문제
                     let month = date.getMonth() + 1;
                     let day = date.getDate();
 
                     dateSpan.textContent = `${month}/${day}`;
                     numberSpan.textContent = day * 1000;
 
-                    infoBox.onclick = () => handleBoxClick(date.getFullYear(), month, day);
+                    infoBox.onclick = () => handleBoxClick(year, month, day);
                 }
             });
 
@@ -244,13 +253,14 @@
                     // 값 변경 예시
                     date.setDate(date.getDate() + 1); // i일 후의 날짜 계산
 
+                    let year = date.getFullYear();
                     let month = date.getMonth() + 1;
                     let day = date.getDate();
 
                     dateSpan.textContent = `${month}/${day}`;
                     numberSpan.textContent = day * 1000;
 
-                    infoBox.onclick = () => handleBoxClick(date.getFullYear(), month, day);
+                    infoBox.onclick = () => handleBoxClick(year, month, day);
                 }
             });
 
@@ -289,11 +299,11 @@
                         console.log(result);
 
                         let tokens = result[0].split('/');
-                        dateSpan.textContent = result[0];
+                        dateSpan.textContent = `${tokens[1]}/${tokens[2]}`;
                         numberSpan.textContent = result[1];
                         console.log(tokens[0], tokens[1]);
 
-                        infoBox.onclick = () => handleBoxClick(standardDate.getFullYear(), tokens[0], tokens[1]);//(standardDate.getFullYear(), tokens[0], tokens[1]);
+                        infoBox.onclick = () => handleBoxClick(tokens[0], tokens[1], tokens[2]);//(standardDate.getFullYear(), tokens[0], tokens[1]);
                     }
                 });
             }

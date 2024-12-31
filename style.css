@@ -78,6 +78,14 @@ button {
     text-align: center;
 }
 
+#align {
+    width:100%;
+    display:flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 10px;
+}
+
 h1 {
     margin-bottom: 20px;
     font-size: 24px;
@@ -89,7 +97,7 @@ h1 {
     display: flex;
     align-items: stretch;
     justify-content: center;
-    gap: 10px;
+    gap: 2%;
 }
 
 #up-down {
