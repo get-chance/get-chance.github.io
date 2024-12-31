@@ -7,6 +7,8 @@
     <title>Document</title>
     <link rel="stylesheet" href="style.css">
     <script src="index.js"></script>
+
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
 </head>
 
 <body>
@@ -58,9 +60,13 @@
 
     <div class="space">
         <div class="header2">
-            <button onclick="changeDate(-1)">&lt;</button>
+            <button>
+                <i class="fas fa-chevron-left"></i>
+            </button>
             <span id="current-date">2024/12/31 (Tue)</span>
-            <button onclick="changeDate(1)">&gt;</button>
+            <button>
+                <i class="fas fa-chevron-right"></i>
+            </button>
         </div>
 
         <div class="stock-list">
@@ -127,9 +133,10 @@
                     let month = nextDate.getMonth() + 1;
                     let day = nextDate.getDate();
 
-                    initial.set(`${year}/${month}/${day}`, day * 1000);
+                    let text = (day > 20) ? `99+건` : `${day}건`;
+                    initial.set(`${year}/${month}/${day}`, text);
 
-                    const box = createBox(year, month, day, day * 1000);
+                    const box = createBox(year, month, day, text);
                     row.appendChild(box);
                 }
             }
@@ -202,9 +209,9 @@
             }
 
             if (index < maxIndex) {
-                upButton = document.getElementById("down");
-                upButton.onclick = down;
-                upButton.style.backgroundColor = '#28a745';
+                let downButton = document.getElementById("down");
+                downButton.onclick = down;
+                downButton.style.backgroundColor = '';
             }
 
             temp = index - standardIndex;
@@ -239,7 +246,7 @@
             });
 
             if (index == 0) {
-                upButton = document.getElementById("up");
+                let upButton = document.getElementById("up");
                 upButton.onclick = null;
                 upButton.style.backgroundColor = 'gray';
             }
@@ -270,9 +277,9 @@
 
 
             if (index > 0) {
-                upButton = document.getElementById("up");
+                let upButton = document.getElementById("up");
                 upButton.onclick = up;
-                upButton.style.backgroundColor = '#28a745';
+                upButton.style.backgroundColor = '';
             }
 
             temp = index - standardIndex;
@@ -306,9 +313,9 @@
             });
 
             if (index == maxIndex) {
-                upButton = document.getElementById("down");
-                upButton.onclick = null;
-                upButton.style.backgroundColor = 'gray';
+                let downButton = document.getElementById("down");
+                downButton.onclick = null;
+                downButton.style.backgroundColor = 'gray';
             }
         }
 
@@ -354,11 +361,11 @@
 
             upButton = document.getElementById("up");
             upButton.onclick = up;
-            upButton.style.backgroundColor = '#28a745';
+            upButton.style.backgroundColor = '';
 
             upButton = document.getElementById("down");
             upButton.onclick = down;
-            upButton.style.backgroundColor = '#28a745';
+            upButton.style.backgroundColor = '';
         }
 
         // 페이지 로딩 후 DOMContentLoaded 이벤트에 따라 함수 호출
