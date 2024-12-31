@@ -119,14 +119,14 @@
 
         // 초기화: 이번 주 표시
         function initWeekBoxes() {
-            const nextDate = new Date(standardDate);
-            nextDate.setDate(nextDate.getDate() - 8); // 현재 날짜에서 7일 빼기
-
-            for (let i = 0; i < 3; i++) {
-                let row = document.getElementById('box-row' + i);
+            if (window.innerWidth <= 2280) {
+                let row = document.getElementById('box-row1');
                 row.innerHTML = '';
 
-                for (let j = 0; j < 7; j++) {
+                const nextDate = new Date(standardDate);
+                nextDate.setDate(nextDate.getDate() - 1);
+
+                for (let j = 0; j < 3; j++) {
                     nextDate.setDate(nextDate.getDate() + 1); // 1일 후의 날짜 계산
 
                     let year = nextDate.getFullYear();
@@ -134,10 +134,72 @@
                     let day = nextDate.getDate();
 
                     let text = (day > 20) ? `99+건` : `${day}건`;
-                    initial.set(`${year}/${month}/${day}`, text);
 
                     const box = createBox(year, month, day, text);
                     row.appendChild(box);
+                }
+
+                infoBoxes = document.getElementById('box-row1').querySelectorAll('.info-box');
+                infoBoxes[0].style.flex = 2;
+
+                row = document.getElementById('box-row2');
+                const div = document.createElement('div');
+                div.style.display = 'flex';
+                div.style.flex = '2';
+                div.style.gap = '10px';
+
+                for (let j = 0; j < 2; j++) {
+                    nextDate.setDate(nextDate.getDate() + 1); // 1일 후의 날짜 계산
+
+                    let year = nextDate.getFullYear();
+                    let month = nextDate.getMonth() + 1;
+                    let day = nextDate.getDate();
+
+                    let text = (day > 20) ? `99+건` : `${day}건`;
+
+                    const box = createBox(year, month, day, text);
+                    div.appendChild(box);
+                }
+
+                row.appendChild(div);
+
+                for (let j = 2; j < 4; j++) {
+                    nextDate.setDate(nextDate.getDate() + 1); // 1일 후의 날짜 계산
+
+                    let year = nextDate.getFullYear();
+                    let month = nextDate.getMonth() + 1;
+                    let day = nextDate.getDate();
+
+                    let text = (day > 20) ? `99+건` : `${day}건`;
+
+                    const box = createBox(year, month, day, text);
+                    row.appendChild(box);
+                }
+
+                document.getElementById('details-button').style.display = 'none';
+                document.getElementById('box-row2').style.display = 'flex';
+
+            } else {
+                const nextDate = new Date(standardDate);
+                nextDate.setDate(nextDate.getDate() - 8); // 현재 날짜에서 7일 빼기
+
+                for (let i = 0; i < 3; i++) {
+                    let row = document.getElementById('box-row' + i);
+                    row.innerHTML = '';
+
+                    for (let j = 0; j < 7; j++) {
+                        nextDate.setDate(nextDate.getDate() + 1); // 1일 후의 날짜 계산
+
+                        let year = nextDate.getFullYear();
+                        let month = nextDate.getMonth() + 1;
+                        let day = nextDate.getDate();
+
+                        let text = (day > 20) ? `99+건` : `${day}건`;
+                        initial.set(`${year}/${month}/${day}`, text);
+
+                        const box = createBox(year, month, day, text);
+                        row.appendChild(box);
+                    }
                 }
             }
 
