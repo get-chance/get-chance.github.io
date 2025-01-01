@@ -119,7 +119,7 @@
 
         // 초기화: 이번 주 표시
         function initWeekBoxes() {
-            if (window.innerWidth <= 1000) {
+            if (window.innerWidth <= 2280) {
                 let row = document.getElementById('box-row1');
                 row.innerHTML = '';
 
@@ -135,7 +135,7 @@
 
                     let text = (day > 20) ? `99+건` : `${day}건`;
 
-                    const box = createBox(year, month, day, window.devicePixelRatio);
+                    const box = createBox(year, month, day, text);
                     row.appendChild(box);
                 }
 
