@@ -210,6 +210,7 @@ h1 {
 
     .info-box {
         flex: initial;
+        height: auto;
     }
 
     .info-box:nth-child(1) {
