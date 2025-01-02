@@ -80,7 +80,6 @@ button {
 /**/
 .stock-info {
     width: 80%;
-    height: 25vh;
     margin: 0 auto;
     text-align: center;
 
@@ -99,7 +98,6 @@ h1 {
 
 #flex-column {
     width: 100%;
-    height: 75%;
     display: flex;
     flex-direction: column;
     align-items: flex-end;
@@ -108,7 +106,6 @@ h1 {
 
 #flex-row {
     width: 100%;
-    height: 100%;
     display: flex;
     align-items: stretch;
     justify-content: center;
@@ -125,7 +122,6 @@ h1 {
 
 #panel-container {
     width: 100%;
-    height: 100%;
     /* 버튼 클릭시 90% */
     display: flex;
     /* 세로로 박스를 쌓을 수 있도록 flex 설정 */
@@ -136,7 +132,6 @@ h1 {
 
 .panel {
     width: 100%;
-    flex: 1;
     display: flex;
     flex-wrap: wrap;
     gap: 10px;
@@ -146,7 +141,7 @@ h1 {
     flex: 1;
     /* width: 14.285%; */
     /* width: 80px; */
-    /* height: 50%; */
+    height: 70px;
     background-color: #007BFF;
     color: white;
     display: flex;
@@ -193,14 +188,25 @@ h1 {
 }
 
 @media (max-width: 520px) {
-    /* #panel1 > #one-line > .info-box:first-child {
-        flex: 2;
+    .stock-info {
+        height: 25vh;
     }
-    #panel1 > #flex-2 {
-        flex: 2;
-        display: flex;
-        gap: 10px;
-    } */
+
+    #flex-column {
+        height: 75%;
+    }
+
+    #flex-row {
+        height: 100%;
+    }
+
+    #panel-container {
+        height: 100%;
+    }
+
+    .panel {
+        flex: 1;
+    }
 
     .info-box {
         flex: initial;
