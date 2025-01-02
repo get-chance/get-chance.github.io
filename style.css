@@ -189,7 +189,7 @@ h1 {
 
 @media (max-width: 520px) {
     .stock-info {
-        height: 25vh;
+        height: clamp(171px, 25vh, 300px); /* 300px은 임의의 값 */
     }
 
     #flex-column {
@@ -211,6 +211,7 @@ h1 {
     .info-box {
         flex: initial;
         height: auto;
+        min-height: auto;
     }
 
     .info-box:nth-child(1) {
