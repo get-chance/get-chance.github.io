@@ -32,24 +32,24 @@
     <!-- 상세 보기 클릭시 캘린더를 띠우고, 선택시 캘린더를 닫고 해당 날짜에 대한 내용 출력 -->
     <section class="stock-info">
         <h1>날짜 선택하기</h1>
-        <div id="align">
-            <div id="panel">
+        <div id="flex-column">
+            <div id="flex-row">
                 <div id="up-down" style="display: none;">
                     <button id="up" class="panel-control" onClick="up()">up</button>
                     <button class="panel-control" onClick="reset()">reset</button>
                     <button id="down" class="panel-control" onClick="down()">down</button>
                 </div>
-                <div id="box-container">
-                    <div id="box-row0" class="box-row" style="display: none; order: 0">
+                <div id="panel-container">
+                    <div id="panel0" class="panel" style="display: none; order: 0">
                     </div>
-                    <div id="box-row1" class="box-row" style="display: flex; order: 1">
+                    <div id="panel1" class="panel" style="display: flex; order: 1">
                         <!-- 예시 -->
                         <div class="info-box" onclick="handleBoxClick('1')">
                             <span class="date">1</span>
                             <span class="number">1000</span>
                         </div>
                     </div>
-                    <div id="box-row2" class="box-row" style="display: none; order: 2">
+                    <div id="panel2" class="panel" style="display: none; order: 2">
                     </div>
                 </div>
             </div>
@@ -63,7 +63,7 @@
             <button>
                 <i class="fas fa-chevron-left"></i>
             </button>
-            <span id="current-date">2024/12/31 (Tue)</span>
+            <span id="current-date">2024/12/31 (화)</span>
             <button>
                 <i class="fas fa-chevron-right"></i>
             </button>
@@ -113,14 +113,14 @@
         let index = standardIndex;
 
         for (let i = 0; i < 3; i++) {
-            order[i] = document.getElementById("box-row" + i);
+            order[i] = document.getElementById("panel" + i);
         }
 
 
         // 초기화: 이번 주 표시
         function initWeekBoxes() {
             if (window.innerWidth <= 360) {
-                let row = document.getElementById('box-row1');
+                let row = document.getElementById('panel1');
                 row.innerHTML = '';
 
                 const nextDate = new Date(standardDate);
@@ -139,10 +139,10 @@
                     row.appendChild(box);
                 }
 
-                infoBoxes = document.getElementById('box-row1').querySelectorAll('.info-box');
+                infoBoxes = document.getElementById('panel1').querySelectorAll('.info-box');
                 infoBoxes[0].style.flex = 2;
 
-                row = document.getElementById('box-row2');
+                row = document.getElementById('panel2');
                 const div = document.createElement('div');
                 div.style.display = 'flex';
                 div.style.flex = '2';
@@ -179,14 +179,14 @@
                 }
 
                 document.getElementById('details-button').style.display = 'none';
-                document.getElementById('box-row2').style.display = 'flex';
+                document.getElementById('panel2').style.display = 'flex';
 
             } else {
                 const nextDate = new Date(standardDate);
                 nextDate.setDate(nextDate.getDate() - 8); // 현재 날짜에서 7일 빼기
 
                 for (let i = 0; i < 3; i++) {
-                    let row = document.getElementById('box-row' + i);
+                    let row = document.getElementById('panel' + i);
                     row.innerHTML = '';
 
                     for (let j = 0; j < 7; j++) {
@@ -205,7 +205,7 @@
                 }
             }
 
-            infoBoxes = document.getElementById('box-row1').querySelectorAll('.info-box');
+            infoBoxes = document.getElementById('panel1').querySelectorAll('.info-box');
             infoBoxes[0].classList.add('highlight');
         }
 
@@ -231,7 +231,7 @@
                 let upDown = document.getElementById('up-down');
                 upDown.style.display = 'flex';
                 upDown.style.width = '10%';
-                document.getElementById('box-container').style.width = "88%";
+                document.getElementById('panel-container').style.width = "88%";
                 detailsButton = document.getElementById('details-button');
                 detailsButton.style.width = "88%";
                 detailsButton.textContent = '간단히 보기'
@@ -242,7 +242,7 @@
                 let upDown = document.getElementById('up-down');
                 upDown.style.display = 'none';
                 upDown.style.width = '0%';
-                document.getElementById('box-container').style.width = "100%";
+                document.getElementById('panel-container').style.width = "100%";
                 detailsButton = document.getElementById('details-button');
                 detailsButton.style.width = "100%";
                 detailsButton.textContent = '간단히 보기'
@@ -263,12 +263,12 @@
             index--;
 
             if (index == 9) {
-                let infoBoxes = document.getElementById('box-row1').querySelectorAll('.info-box');
+                let infoBoxes = document.getElementById('panel1').querySelectorAll('.info-box');
                 infoBoxes[0].classList.add('highlight');
             }
 
             if (index == 6) {
-                let infoBoxes = document.getElementById('box-row1').querySelectorAll('.info-box');
+                let infoBoxes = document.getElementById('panel1').querySelectorAll('.info-box');
                 infoBoxes[0].classList.remove('highlight');
             }
 
@@ -285,7 +285,7 @@
             date.setDate(date.getDate() + 7 * (temp - 1) - 1)
             console.log(date.getDate());
 
-            // box-row 안의 모든 info-box 요소를 선택
+            // panel 안의 모든 info-box 요소를 선택
             const infoBoxes = order[0].querySelectorAll('.info-box');
 
             // info-box를 순회하며 작업 수행
@@ -320,12 +320,12 @@
             index++;
 
             if (index == 7) {
-                let infoBoxes = document.getElementById('box-row1').querySelectorAll('.info-box');
+                let infoBoxes = document.getElementById('panel1').querySelectorAll('.info-box');
                 infoBoxes[0].classList.add('highlight');
             }
 
             if (index == 10) {
-                let infoBoxes = document.getElementById('box-row1').querySelectorAll('.info-box');
+                let infoBoxes = document.getElementById('panel1').querySelectorAll('.info-box');
                 infoBoxes[0].classList.remove('highlight');
                 console.log("checked")
             }
@@ -352,7 +352,7 @@
             let date = new Date(standardDate);
             date.setDate(date.getDate() + 7 * (temp + 1) - 1);
 
-            // box-row 안의 모든 info-box 요소를 선택
+            // panel 안의 모든 info-box 요소를 선택
             const infoBoxes = order[2].querySelectorAll('.info-box');
 
             // info-box를 순회하며 작업 수행
@@ -390,7 +390,7 @@
 
             ////
             for (let i = 0; i < 3; i++) {
-                order[i] = document.getElementById("box-row" + i);
+                order[i] = document.getElementById("panel" + i);
                 order[i].style.order = i;
             }
 
