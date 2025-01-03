@@ -137,12 +137,22 @@
         window.addEventListener('resize', () => {
             if (window.innerWidth < 520) {
                 console.log('화면 너비가 768px보다 작습니다.');
-                reset();
 
-                order[0].style.display = 'none';
-                order[2].style.display = 'none';
+                if (isExpanded) {
+                    reset();
 
-                document.getElementById('up-down').style.display = 'none';
+                    order[0].style.display = 'none';
+                    order[2].style.display = 'none';
+                    let upDown = document.getElementById('up-down');
+                    upDown.style.display = 'none';
+                    upDown.style.width = '0%';
+                    document.getElementById('panel-container').style.width = "100%";
+                    detailsButton = document.getElementById('details-button');
+                    detailsButton.style.width = "100%";
+                    detailsButton.textContent = '자세히 보기'
+
+                    isExpanded = !isExpanded;
+                }
             }
         });
 
@@ -225,7 +235,7 @@
                 document.getElementById('panel-container').style.width = "100%";
                 detailsButton = document.getElementById('details-button');
                 detailsButton.style.width = "100%";
-                detailsButton.textContent = '간단히 보기'
+                detailsButton.textContent = '자세히 보기'
             }
 
             isExpanded = !isExpanded;
