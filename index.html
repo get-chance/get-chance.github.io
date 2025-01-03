@@ -32,7 +32,7 @@
     <!-- 상세 보기 클릭시 캘린더를 띠우고, 선택시 캘린더를 닫고 해당 날짜에 대한 내용 출력 -->
     <section class="stock-info">
         <h1>날짜 선택하기</h1>
-        <div id="flex-column">
+        <!-- <div id="flex-column"> -->
             <div id="flex-row">
                 <div id="up-down" style="display: none;">
                     <button id="up" class="panel-control" onClick="up()">up</button>
@@ -45,7 +45,6 @@
                     <!-- Main panel -->
                     <div id="panel1" class="panel" style="display: flex; order: 1">
                         <!-- 예시 -->
-
                         <div class="info-box" onclick="handleBoxClick('1')">
                             <span class="date">1/1</span>
                             <span class="number">1건</span>
@@ -81,9 +80,10 @@
                     </div>
                 </div>
             </div>
-            <button id="details-button" class="details-button" onclick="toggleDetails()" style="order: 3">더 많이
-                보기</button>
-        </div>
+            
+        <!-- </div> -->
+        <button id="details-button" class="details-button" onclick="toggleDetails()" style="order: 3">더 많이
+            보기</button>
     </section>
 
     <div class="space">

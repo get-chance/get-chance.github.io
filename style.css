@@ -86,10 +86,11 @@ button {
     display: flex;
     flex-direction: column;
     align-items: flex-end;
+    gap: 10px;
 }
 
 h1 {
-    margin-bottom: 20px;
+    margin-bottom: 0px;
     /* height: 25%; 파트 높이의 1/4 */
     font-size: clamp(15px, 3vh, 20px);
     /* 파트 높이의 1/8 */
@@ -107,26 +108,22 @@ h1 {
 #flex-row {
     width: 100%;
     display: flex;
-    align-items: stretch;
+    /* align-items: stretch; */
     justify-content: center;
     gap: 2%;
 }
 
 #up-down {
-    width: 0%;
-    /* 버튼 클릭시 10% */
+    width: 0%; /* 버튼 클릭시 10% */
     display: flex;
     flex-direction: column;
     justify-content: space-between;
 }
 
 #panel-container {
-    width: 100%;
-    /* 버튼 클릭시 90% */
-    display: flex;
-    /* 세로로 박스를 쌓을 수 있도록 flex 설정 */
-    flex-direction: column;
-    /* 여러 줄이 세로로 쌓이게 설정 */
+    width: 100%; /* 버튼 클릭시 90% */
+    display: flex; /* 세로로 박스를 쌓을 수 있도록 flex 설정 */
+    flex-direction: column; /* 여러 줄이 세로로 쌓이게 설정 */
     gap: 10px;
 }
 
@@ -139,15 +136,15 @@ h1 {
 
 .info-box {
     flex: 1;
-    /* width: 14.285%; */
-    /* width: 80px; */
     height: 70px;
     background-color: #007BFF;
     color: white;
+
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
+
     border-radius: 5px;
     cursor: pointer;
     /* transition: transform 0.2s, background-color 0.2s; */
@@ -197,7 +194,7 @@ h1 {
     }
 
     #flex-row {
-        height: 100%;
+        height: 100%; /* stock-info에 할당된 높이중 마진,gap과 h1의 콘텐츠 영역의 높이를 뺀 전체를 차지 */
     }
 
     #panel-container {
@@ -206,12 +203,13 @@ h1 {
 
     .panel {
         flex: 1;
+        align-items: stretch; /* 패널에 주어진 높이 안에서 쭉 뻗으라고 */
     }
 
-    .info-box {
-        flex: initial;
-        height: auto;
-        min-height: auto; /* 아래 내용들을 밀어내도록(아래 내용과 겹치지 않도록) */
+    .info-box { /* 모바일에서 처음에 박스가 커졌다 터치하면 작아지는 문제 해결을 위해 순서를 panel보다 위에 위치하게 함 */
+        flex: initial; /* width는 각각 설정해줌 */
+        height: auto; /* panel에 할당된 높이가 info-box의 높이 */
+        min-height: auto; /* 높이를 auto로 했어도, box안 내용 때문에 줄어드는게 한계가 있음. 아래 내용들을 밀어내도록(아래 내용과 겹치지 않도록) */
     }
 
     .info-box:nth-child(1) {
