@@ -186,7 +186,7 @@ h1 {
 
 @media (max-width: 520px) {
     .stock-info {
-        height: clamp(171px, 25vh, 300px); /* 300px은 임의의 값 */
+        height: 171px; /*clamp(171px, 25vh, 300px);*/ /* 300px은 임의의 값 */
     }
 
     /* #flex-column {
@@ -204,7 +204,7 @@ h1 {
     .info-box { /* 모바일에서 처음에 박스가 커졌다 터치하면 작아지는 문제 해결을 위해 순서를 panel보다 위에 위치하게 함 */
         flex: initial; /* width는 각각 설정해줌 */
         height: auto; /* panel에 할당된 높이가 info-box의 높이 */
-        min-height: auto; /* 높이를 auto로 했어도, box안 내용 때문에 줄어드는게 한계가 있음. 아래 내용들을 밀어내도록(아래 내용과 겹치지 않도록) */
+        /* min-height: auto; 높이를 auto로 했어도, box안 내용 때문에 줄어드는게 한계가 있음. 아래 내용들을 밀어내도록(아래 내용과 겹치지 않도록) */
     }
 
     .panel {
