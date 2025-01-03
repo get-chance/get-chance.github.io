@@ -97,13 +97,13 @@ h1 {
     color: #333;
 }
 
-#flex-column {
+/* #flex-column {
     width: 100%;
     display: flex;
     flex-direction: column;
     align-items: flex-end;
     gap: 10px;
-}
+} */
 
 #flex-row {
     width: 100%;
@@ -189,9 +189,9 @@ h1 {
         height: clamp(171px, 25vh, 300px); /* 300px은 임의의 값 */
     }
 
-    #flex-column {
+    /* #flex-column {
         height: 75%;
-    }
+    } */
 
     #flex-row {
         height: 100%; /* stock-info에 할당된 높이중 마진,gap과 h1의 콘텐츠 영역의 높이를 뺀 전체를 차지 */
@@ -201,15 +201,15 @@ h1 {
         height: 100%;
     }
 
-    .panel {
-        flex: 1;
-        align-items: stretch; /* 패널에 주어진 높이 안에서 쭉 뻗으라고 */
-    }
-
     .info-box { /* 모바일에서 처음에 박스가 커졌다 터치하면 작아지는 문제 해결을 위해 순서를 panel보다 위에 위치하게 함 */
         flex: initial; /* width는 각각 설정해줌 */
         height: auto; /* panel에 할당된 높이가 info-box의 높이 */
         min-height: auto; /* 높이를 auto로 했어도, box안 내용 때문에 줄어드는게 한계가 있음. 아래 내용들을 밀어내도록(아래 내용과 겹치지 않도록) */
+    }
+
+    .panel {
+        flex: 1;
+        align-items: stretch; /* 패널에 주어진 높이 안에서 쭉 뻗으라고 */
     }
 
     .info-box:nth-child(1) {
