@@ -141,7 +141,7 @@ h1 {
     flex: 1;
     /* width: 14.285%; */
     /* width: 80px; */
-    height: 50px;
+    height: 70px;
     background-color: #007BFF;
     color: white;
     display: flex;
@@ -211,7 +211,7 @@ h1 {
     .info-box {
         flex: initial;
         height: auto;
-        min-height: auto;
+        min-height: auto; /* 아래 내용들을 밀어내도록(아래 내용과 겹치지 않도록) */
     }
 
     .info-box:nth-child(1) {

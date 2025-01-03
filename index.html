@@ -132,6 +132,11 @@
     </div>
 
     <script>
+        /* 모바일(스마트폰)에서 info-box의 height가 70px였다가 터치하면 그제서야 제 값을 찾아가는 듯한 문제의 해결을 위함 */
+        window.addEventListener('load', () => {
+            // 강제 리플로우 트리거
+            document.body.offsetHeight;
+        });
         /* 화면이 컸을때, details-button을 누르고, 확장된 상태에서 화면을 줄이면, 여전히 확장된 상태로 남아있게 됨.
         이를 해결하기 위해, 화면이 작아짐을 감지하고, 확장된 패널을 초기화 후, panel1만 띄우는 것으로 처리를 위함 */
         window.addEventListener('resize', () => {
