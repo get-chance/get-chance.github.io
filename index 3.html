@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="style 3.css">
+    <script src="index 3.js"></script>
+
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+</head>
+
+<body>
+    <div id="header">
+        <div id="container">
+            <span id="app_name">미래의 머니</span>
+            <a id="add_companies_to_favorites" onClick="openPopupForAddnDelete()">
+                <img src="./resource/button-add-svgrepo-com.svg">
+            </a>
+        </div>
+    </div>
+
+    <div id="popup-AddnDeleteStock" style="display:none;">
+        <div id="popup-container">
+            <button id="popup-close" onclick="closePopupForAddnDelete()">x</button>
+            <iframe id="popup-iframe" src="./popup/AddnDeleteStock.html"></iframe>
+        </div>
+    </div>
+
+    <!-- 7개(오늘 포함) : 오늘 기준 전 2일, 후 4일 -->
+    <!-- 상세 보기 클릭시 캘린더를 띠우고, 선택시 캘린더를 닫고 해당 날짜에 대한 내용 출력 -->
+    <section class="stock-info">
+        <h1>날짜 선택하기</h1>
+        <!-- <div id="flex-column"> -->
+            <div id="flex-row">
+                <div id="up-down" style="display: none;">
+                    <button id="up" class="panel-control" onClick="up()">up</button>
+                    <button class="panel-control" onClick="reset()">reset</button>
+                    <button id="down" class="panel-control" onClick="down()">down</button>
+                </div>
+                <div id="panel-container">
+                    <div id="panel0" class="panel" style="order: 0">
+                    </div>
+                    <!-- Main panel -->
+                    <div id="panel1" class="panel" style="display: flex; order: 1">
+                        <!-- 예시 -->
+                        <div class="info-box" onclick="handleBoxClick('1')">
+                            <span class="date">1/1</span>
+                            <span class="number">1건</span>
+                        </div>
+                        <div class="info-box" onclick="handleBoxClick('2')">
+                            <span class="date">1/2</span>
+                            <span class="number">1건</span>
+                        </div>
+                        <div class="info-box" onclick="handleBoxClick('3')">
+                            <span class="date">1/3</span>
+                            <span class="number">1건</span>
+                        </div>
+
+                        <div class="info-box" onclick="handleBoxClick('4')">
+                            <span class="date">1/4</span>
+                            <span class="number">1건</span>
+                        </div>
+
+                        <div class="info-box" onclick="handleBoxClick('5')">
+                            <span class="date">1/5</span>
+                            <span class="number">1건</span>
+                        </div>
+                        <div class="info-box" onclick="handleBoxClick('6')">
+                            <span class="date">1/6</span>
+                            <span class="number">1건</span>
+                        </div>
+                        <div class="info-box" onclick="handleBoxClick('7')">
+                            <span class="date">1/7</span>
+                            <span class="number">1건</span>
+                        </div>
+                    </div>
+                    <div id="panel2" class="panel" style="order: 2">
+                    </div>
+                </div>
+                
+            </div>
+
+            <button class="btn-prev">◀</button>
+            <button class="btn-next">▶</button>
+            
+        <!-- </div> -->
+        <button id="details-button" class="details-button" onclick="toggleDetails()" style="order: 3">더 많이
+            보기</button>
+    </section>
+
+    <div class="space">
+        <div class="header2">
+            <button>
+                <i class="fas fa-chevron-left"></i>
+            </button>
+            <span id="current-date">2024/12/31 (화)</span>
+            <button>
+                <i class="fas fa-chevron-right"></i>
+            </button>
+        </div>
+
+        <div class="stock-list">
+            <div class="stock-item">
+                <div class="company">Apple</div>
+                <div class="divider"></div>
+                <div class="info">
+                    Opening: $150<br>
+                    Closing: $155<br>
+                    Volume: 50M
+                </div>
+            </div>
+            <div class="stock-item">
+                <div class="company">Microsoft</div>
+                <div class="divider"></div>
+                <div class="info">
+                    Opening: $300<br>
+                    Closing: $310<br>
+                    Volume: 40M
+                </div>
+            </div>
+            <div class="stock-item">
+                <div class="company">Google</div>
+                <div class="divider"></div>
+                <div class="info">
+                    Opening: $2800<br>
+                    Closing: $2850<br>
+                    Volume: 30M<br>
+                    hello friend<br>
+                    hi nict<br>
+                    kkk<br>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const container = document.querySelector("#panel-container");
+            const panels = document.querySelectorAll(".panel");
+            // const prevButton = document.querySelector(".btn-prev");
+            // const nextButton = document.querySelector(".btn-next");
+
+            let currentIndex = 1;
+            let startX = 0;
+            let currentTranslate = 0;
+            let prevTranslate = 0;
+            let isDragging = false;
+
+            const updatePosition = () => {
+                container.style.transform = `translateX(${currentTranslate}px)`;
+            };
+
+            const setPositionByIndex = () => {
+                currentTranslate = -currentIndex * (container.offsetWidth + 10);
+                prevTranslate = currentTranslate;
+                updatePosition();
+            };
+
+            const touchStart = (e) => {
+                startX = e.type === "touchstart" ? e.touches[0].clientX : e.clientX;
+                isDragging = true;
+                container.style.transition = "none";
+            };
+
+            const touchMove = (e) => {
+                if (!isDragging) return; /* 마우스를 클릭하지 않고 그냥 움직이는 경우에는 해당 안함을 뜻함*/
+                const currentX = e.type === "touchmove" ? e.touches[0].clientX : e.clientX;
+                currentTranslate = prevTranslate + (currentX - startX); /* prevTranslate는 setPositionByIndex에서 지정되는데, 드래그 이전 인덱스에 해당하는 이동을 기억하기 위함인듯 */
+                updatePosition();
+            };
+
+            const touchEnd = () => {
+                isDragging = false;
+                const movedBy = currentTranslate - prevTranslate;
+
+                if (movedBy < -50 && currentIndex < panels.length - 1) currentIndex++; /* 오른쪽에서 왼쪽으로 드래그 */
+                if (movedBy > 50 && currentIndex > 0) currentIndex--; /* 왼쪽에서 오른쪽으로 드래그 */
+
+                setPositionByIndex();
+                container.style.transition = "transform 0.5s ease-in-out";
+            };
+
+            // const showPrev = () => {
+            //     if (currentIndex > 0) {
+            //         currentIndex--;
+            //         setPositionByIndex();
+            //     }
+            // };
+
+            // const showNext = () => {
+            //     if (currentIndex < panels.length - 1) {
+            //         currentIndex++;
+            //         setPositionByIndex();
+            //     }
+            // };
+
+            // Mouse events
+            container.addEventListener("mousedown", touchStart); /* container에만 이벤트 리스너 추가, 다른 곳 마우스 클릭해도 작동안함 */
+            container.addEventListener("mousemove", touchMove);
+            container.addEventListener("mouseup", touchEnd);
+            container.addEventListener("mouseleave", () => isDragging && touchEnd());
+
+            // Touch events
+            container.addEventListener("touchstart", touchStart);
+            container.addEventListener("touchmove", touchMove);
+            container.addEventListener("touchend", touchEnd);
+
+            // // Button events
+            // prevButton.addEventListener("click", showPrev);
+            // nextButton.addEventListener("click", showNext);
+
+            // Initialize
+            setPositionByIndex();
+        });
+    </script>
+
+    <script>
+        /* 화면이 컸을때, details-button을 누르고, 확장된 상태에서 화면을 줄이면, 여전히 확장된 상태로 남아있게 됨.
+        이를 해결하기 위해, 화면이 작아짐을 감지하고, 확장된 패널을 초기화 후, panel1만 띄우는 것으로 처리를 위함 */
+        window.addEventListener('resize', () => {
+            if (window.innerWidth < 520) {
+                console.log('화면 너비가 768px보다 작습니다.');
+
+                if (isExpanded) {
+                    reset();
+
+                    order[0].style.display = 'none';
+                    order[2].style.display = 'none';
+                    let upDown = document.getElementById('up-down');
+                    upDown.style.display = 'none';
+                    upDown.style.width = '0%';
+                    document.getElementById('panel-container').style.width = "100%";
+                    detailsButton = document.getElementById('details-button');
+                    detailsButton.style.width = "100%";
+                    detailsButton.textContent = '자세히 보기'
+
+                    isExpanded = !isExpanded;
+                }
+            }
+        });
+
+
+        let isExpanded = false;
+        const initial = new Map();
+        let order = new Array(3);
+        let standardDate = new Date(); // 현재 날짜 가져오기
+        const standardIndex = 8;
+        const maxIndex = 16;
+        let index = standardIndex;
+
+        for (let i = 0; i < 3; i++) {
+            order[i] = document.getElementById("panel" + i);
+        }
+
+
+        // 초기화: 이번 주 표시
+        function initWeekBoxes() {
+            const nextDate = new Date(standardDate);
+            nextDate.setDate(nextDate.getDate() - 8); // 현재 날짜에서 7일 빼기
+
+            for (let i = 0; i < 3; i++) {
+                let row = document.getElementById('panel' + i);
+                row.innerHTML = '';
+
+                for (let j = 0; j < 7; j++) {
+                    nextDate.setDate(nextDate.getDate() + 1); // 1일 후의 날짜 계산
+
+                    let year = nextDate.getFullYear();
+                    let month = nextDate.getMonth() + 1;
+                    let day = nextDate.getDate();
+
+                    let text = (day > 20) ? `99+건` : `${day}건`;
+                    initial.set(`${year}/${month}/${day}`, text);
+
+                    const box = createBox(year, month, day, text);
+                    row.appendChild(box);
+                }
+            }
+
+
+            infoBoxes = document.getElementById('panel1').querySelectorAll('.info-box');
+            infoBoxes[0].classList.add('highlight');
+        }
+
+        // 박스 생성 함수
+        function createBox(year, month, day, value) {
+            const box = document.createElement('div');
+            box.className = 'info-box';
+            box.onclick = () => handleBoxClick(year, month, day);
+            box.innerHTML = `<span class="date">${month}/${day}</span> <span class="number">${value}</span>`;
+            return box;
+        }
+
+        function handleBoxClick(year, month, day) {
+            alert(`${year}년 ${month}월 ${day}일 을 선택하셨습니다`);
+        }
+
+        function toggleDetails() {
+            reset();
+
+            if (!isExpanded) {
+                order[0].style.display = 'flex';
+                order[2].style.display = 'flex';
+                let upDown = document.getElementById('up-down');
+                upDown.style.display = 'flex';
+                upDown.style.width = '10%';
+                document.getElementById('panel-container').style.width = "88%";
+                detailsButton = document.getElementById('details-button');
+                detailsButton.style.width = "88%";
+                detailsButton.textContent = '간단히 보기'
+
+            } else {
+                order[0].style.display = 'none';
+                order[2].style.display = 'none';
+                let upDown = document.getElementById('up-down');
+                upDown.style.display = 'none';
+                upDown.style.width = '0%';
+                document.getElementById('panel-container').style.width = "100%";
+                detailsButton = document.getElementById('details-button');
+                detailsButton.style.width = "100%";
+                detailsButton.textContent = '자세히 보기'
+            }
+
+            isExpanded = !isExpanded;
+        }
+
+        function up() {
+            let temp = order[2];
+            order[1].style.order = 2;
+            order[2] = order[1];
+            order[0].style.order = 1;
+            order[1] = order[0];
+            temp.style.order = 0;
+            order[0] = temp;
+
+            index--;
+
+            if (index == 9) {
+                let infoBoxes = document.getElementById('panel1').querySelectorAll('.info-box');
+                infoBoxes[0].classList.add('highlight');
+            }
+
+            if (index == 6) {
+                let infoBoxes = document.getElementById('panel1').querySelectorAll('.info-box');
+                infoBoxes[0].classList.remove('highlight');
+            }
+
+            if (index < maxIndex) {
+                let downButton = document.getElementById("down");
+                downButton.onclick = down;
+                downButton.style.backgroundColor = '';
+            }
+
+            temp = index - standardIndex;
+            console.log(temp);
+
+            let date = new Date(standardDate);
+            date.setDate(date.getDate() + 7 * (temp - 1) - 1)
+            console.log(date.getDate());
+
+            // panel 안의 모든 info-box 요소를 선택
+            const infoBoxes = order[0].querySelectorAll('.info-box');
+
+            // info-box를 순회하며 작업 수행
+            infoBoxes.forEach((infoBox, index) => {
+                // date와 number 값 가져오기
+                const dateSpan = infoBox.querySelector('.date');
+                const numberSpan = infoBox.querySelector('.number');
+
+                if (dateSpan && numberSpan) {
+                    // 값 변경 예시
+                    date.setDate(date.getDate() + 1); // i일 후의 날짜 계산
+
+                    let year = date.getFullYear(); // handleBoxClick에 직접 입력시 12/31이 2025년으로 출력되는 문제
+                    let month = date.getMonth() + 1;
+                    let day = date.getDate();
+
+                    dateSpan.textContent = `${month}/${day}`;
+                    numberSpan.textContent = day * 1000;
+
+                    infoBox.onclick = () => handleBoxClick(year, month, day);
+                }
+            });
+
+            if (index == 0) {
+                let upButton = document.getElementById("up");
+                upButton.onclick = null;
+                upButton.style.backgroundColor = 'gray';
+            }
+        }
+
+        function down() {
+            index++;
+
+            if (index == 7) {
+                let infoBoxes = document.getElementById('panel1').querySelectorAll('.info-box');
+                infoBoxes[0].classList.add('highlight');
+            }
+
+            if (index == 10) {
+                let infoBoxes = document.getElementById('panel1').querySelectorAll('.info-box');
+                infoBoxes[0].classList.remove('highlight');
+                console.log("checked")
+            }
+
+            let temp = order[0];
+            order[1].style.order = 0;
+            order[0] = order[1];
+            order[2].style.order = 1;
+            order[1] = order[2];
+            temp.style.order = 2;
+            order[2] = temp;
+
+
+
+            if (index > 0) {
+                let upButton = document.getElementById("up");
+                upButton.onclick = up;
+                upButton.style.backgroundColor = '';
+            }
+
+            temp = index - standardIndex;
+            console.log(temp);
+
+            let date = new Date(standardDate);
+            date.setDate(date.getDate() + 7 * (temp + 1) - 1);
+
+            // panel 안의 모든 info-box 요소를 선택
+            const infoBoxes = order[2].querySelectorAll('.info-box');
+
+            // info-box를 순회하며 작업 수행
+            infoBoxes.forEach((infoBox, index) => {
+                // date와 number 값 가져오기
+                const dateSpan = infoBox.querySelector('.date');
+                const numberSpan = infoBox.querySelector('.number');
+
+                if (dateSpan && numberSpan) {
+                    // 값 변경 예시
+                    date.setDate(date.getDate() + 1); // i일 후의 날짜 계산
+
+                    let year = date.getFullYear();
+                    let month = date.getMonth() + 1;
+                    let day = date.getDate();
+
+                    dateSpan.textContent = `${month}/${day}`;
+                    numberSpan.textContent = day * 1000;
+
+                    infoBox.onclick = () => handleBoxClick(year, month, day);
+                }
+            });
+
+            if (index == maxIndex) {
+                let downButton = document.getElementById("down");
+                downButton.onclick = null;
+                downButton.style.backgroundColor = 'gray';
+            }
+        }
+
+        function reset() {
+            if (index == standardIndex) return;
+
+            index = standardIndex;
+
+            ////
+            for (let i = 0; i < 3; i++) {
+                order[i] = document.getElementById("panel" + i);
+                order[i].style.order = i;
+            }
+
+            const iterator = initial.entries(); // Map의 이터레이터 생성
+
+            for (let i = 0; i < 3; i++) {
+                const infoBoxes = order[i].querySelectorAll('.info-box');
+
+                // info-box를 순회하며 작업 수행
+                infoBoxes.forEach((infoBox, index) => {
+                    // date와 number 값 가져오기
+                    const dateSpan = infoBox.querySelector('.date');
+                    const numberSpan = infoBox.querySelector('.number');
+
+                    if (dateSpan && numberSpan) {
+                        // 값 변경 예시
+                        let result = iterator.next().value;
+                        console.log(result);
+
+                        let tokens = result[0].split('/');
+                        dateSpan.textContent = `${tokens[1]}/${tokens[2]}`;
+                        numberSpan.textContent = result[1];
+                        console.log(tokens[0], tokens[1]);
+
+                        infoBox.onclick = () => handleBoxClick(tokens[0], tokens[1], tokens[2]);//(standardDate.getFullYear(), tokens[0], tokens[1]);
+                    }
+                });
+            }
+
+            let infoBoxes = order[1].querySelectorAll('.info-box');
+            infoBoxes[0].classList.add('highlight');
+
+            upButton = document.getElementById("up");
+            upButton.onclick = up;
+            upButton.style.backgroundColor = '';
+
+            upButton = document.getElementById("down");
+            upButton.onclick = down;
+            upButton.style.backgroundColor = '';
+        }
+
+        // 페이지 로딩 후 DOMContentLoaded 이벤트에 따라 함수 호출
+        document.addEventListener('DOMContentLoaded', initWeekBoxes);
+    </script>
+</body>
+
+</html>
