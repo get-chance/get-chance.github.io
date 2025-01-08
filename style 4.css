@@ -1,0 +1,402 @@
+body {
+    margin: 0px;
+}
+
+#header {
+    margin: 8px 8px 0px 8px;
+}
+
+#container {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+}
+
+#app_name {
+    font-size: 20px;
+}
+
+button {
+    background-color: rgba(0, 0, 0, 0);
+    border: 0;
+    margin: 0;
+    padding: 0;
+}
+
+#add_companies_to_favorites {
+    cursor: pointer;
+}
+
+#add_companies_to_favorites>img {
+    width: 26.67px;
+    height: 26.67px;
+    vertical-align: middle;
+}
+
+#popup-AddnDeleteStock {
+    position: fixed;
+    /* 전체 화면의 왼쪽 상단점을 기준으로 */
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    /* 반투명 검정색 */
+}
+
+#popup-container {
+    position: absolute;
+    /* position: static이 아닌 부모 및 조상(없을시 body)의 왼쪽 상단점을 기준으로 */
+    top: 50%;
+    left: 50%;
+    width: 80%;
+    /* 부모 width의 80% */
+    height: 80%;
+    transform: translate(-50%, -50%);
+    background: #fff;
+
+}
+
+#popup-close {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    font-size: 18px;
+    color: white;
+    width: 30px;
+    height: 30px;
+    background: #f44336;
+    border: none;
+    cursor: pointer;
+
+    /*x를 버튼의 가운데에 오도록 하기 위함*/
+    display: flex;
+    flex-direction: column;
+    /* 위아래로 배치 */
+    /* flex 요소안에 여러 요소가 있을 때 효과적 */
+    align-items: center;
+    justify-content: center;
+}
+
+#popup-iframe {
+    width: 100%;
+    height: 100%;
+    border: none;
+}
+
+/**/
+.stock-info {
+    width: 80%;
+    margin: 0 auto;
+    text-align: center;
+
+    display: flex; /* h1을 우측 정렬하고, for-button(panel-container)과 gap을 주기 위함 */
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 10px;
+}
+
+h1 {
+    margin-bottom: 0px;
+    /* height: 25%; 파트 높이의 1/4 */
+    font-size: clamp(15px, 3vh, 20px);
+    /* 파트 높이의 1/8 */
+    color: #333;
+}
+
+#for-button {
+    width: 100%;
+    height: 100%;
+
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 10px;
+}
+
+.btn-prev, .btn-next {
+    display: none;
+}
+
+/* #flex-column {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 10px;
+} */
+
+#flex-row {
+    width: 100%;
+    display: flex;
+    /* align-items: stretch; */
+    justify-content: center;
+    gap: 2%;
+}
+
+#up-down {
+    width: 0%; /* 버튼 클릭시 10% */
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+#panel-container {
+    width: 100%; /* 버튼 클릭시 90% */
+    display: flex; /* 세로로 박스를 쌓을 수 있도록 flex 설정 */
+    flex-direction: column; /* 여러 줄이 세로로 쌓이게 설정 */
+    gap: 10px;
+}
+
+.panel {
+    width: 100%;
+
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+#panel0, #panel1, #panel3, #panel4, #panel5, #panel6 {
+    display: none;
+}
+
+.info-box {
+    flex: 1;
+    height: 70px;
+    background-color: #007BFF;
+    color: white;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 5px;
+    cursor: pointer;
+    /* transition: transform 0.2s, background-color 0.2s; */
+}
+
+.info-box:hover {
+    transform: scale(1.1);
+    background-color: #0056b3;
+}
+
+.info-box .date {
+    align-self: flex-start;
+    margin-left: 5px;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+.info-box .number {
+    font-size: 20px;
+    font-weight: bold;
+}
+
+.details-button {
+    width: 100%;
+    padding: 10px 20px;
+    font-size: 16px;
+    color: white;
+    background-color: #333333;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.2s, transform 0.2s;
+}
+
+.details-button:hover {
+    background-color: #555555;
+    transform: scale(1.05);
+}
+
+@media (max-width: 520px) {
+    .stock-info {
+        height: 171px;
+        /*clamp(171px, 25vh, 300px);*/
+        /* 300px은 임의의 값 */
+    }
+
+    #for-button {
+        width: 100%;
+        height: 100%;
+
+        position: relative; /* relative, 0, 0은 postion: static과 동일 */
+        top: 0;
+        left: 0;
+    }
+
+    #flex-row {
+        height: 100%;
+        /* stock-info에 할당된 높이중 마진,gap과 h1의 콘텐츠 영역의 높이를 뺀 전체를 차지 */
+
+        overflow: hidden;
+    }
+
+    #panel-container {
+        height: 100%;
+
+        flex-direction: row;
+        transition: transform 0.5s ease-in-out;
+        transform: translateX(0);
+    }
+
+    .panel {
+        flex: 0 0 100%;
+        /* background: #ddd; */
+        align-items: stretch;
+        /* 패널에 주어진 높이 안에서 쭉 뻗으라고 */
+    }
+
+    #panel0, #panel1, #panel3, #panel4, #panel5, #panel6 {
+        display: flex;
+    }
+
+    .info-box {
+        /* // 모바일에서 처음에 박스가 커졌다 터치하면 작아지는 문제 해결을 위해 순서를 panel보다 위에 위치하게 함  */
+        flex: initial;
+        /* // width는 각각 설정해줌 */
+        height: auto;
+        width: calc((100% - 30px) / 4);
+        /* // panel에 할당된 높이가 info-box의 높이 */
+        /* // min-height: auto; 높이를 auto로 했어도, box안 내용 때문에 줄어드는게 한계가 있음. 아래 내용들을 밀어내도록(아래 내용과 겹치지 않도록) */
+    }
+
+    .current-week:nth-child(1) {
+        width: calc((100% - 20px) / 4 * 2);
+    }
+
+    .current-week:nth-child(2),
+    .current-week:nth-child(3),
+    .current-week:nth-child(6),
+    .current-week:nth-child(7) {
+        width: calc((100% - 20px) / 4);
+    }
+
+    .current-week:nth-child(4),
+    .current-week:nth-child(5) {
+        width: calc(((100% - 20px) / 4 * 2 - 10px) / 2);
+    }
+
+    .btn-prev, .btn-next {
+        display: block;
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        /* background: rgba(0, 0, 0, 0.5); */
+        color: gray;
+        border: none;
+        cursor: pointer;
+        /* padding: 10px; */
+    }
+
+    .btn-prev {
+        /* overflow:visible; */
+        left: -6.25%;
+        /* z-index: 10; */
+        transform: translateY(-50%) translateX(-50%) ;
+    }
+
+    .btn-next {
+        right: -6.25%;
+        transform: translateY(-50%) translateX(+50%) ;
+    }
+
+    .details-button {
+        display: none;
+    }
+}
+
+.panel-control {
+    padding: 10px 10px;
+    font-size: 15px;
+    background-color: #333333;
+    color: white;
+    border-radius: 5px;
+}
+
+.panel-control:hover {
+    background-color: #555555;
+    transform: scale(1.05);
+}
+
+.highlight {
+    background-color: #FFC107;
+    /* 이번 주 강조 색 */
+    color: #333;
+}
+
+.space {
+    width: 80%;
+    margin: 0 auto;
+}
+
+.header2 {
+    display: flex;
+    align-items: baseline;
+    justify-content: center;
+    margin-top: 20px;
+    padding: 20px;
+    background-color: #4CAF50;
+    color: white;
+}
+
+.header2 button {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 1.5em;
+    margin-right: 20px;
+    margin-left: 20px;
+    cursor: pointer;
+    border: none;
+    background: none;
+}
+
+.header2 span {
+    font-size: 1.5em;
+    font-weight: bold;
+}
+
+.stock-list {
+    padding: 20px 0px 20px 0px;
+}
+
+.stock-item {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    margin-bottom: 20px;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    background-color: #fff;
+}
+
+.stock-item div {
+    padding: 10px;
+}
+
+.stock-item .company {
+    flex: 1;
+    text-align: left;
+    font-weight: bold;
+}
+
+.stock-item .divider {
+    width: 4px;
+    /* 세로선의 두께 */
+    padding: 0px;
+    background-color: #e0e0e0;
+    /* 세로선 색상 */
+    height: auto;
+    /* 부모 요소의 높이에 맞추기 */
+    align-self: stretch;
+    /*Flexbox 안에서 세로로 늘어나게 설정*/
+}
+
+.stock-item .info {
+    flex: 2;
+    text-align: left;
+}
