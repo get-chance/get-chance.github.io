@@ -2,7 +2,7 @@
     constructor(containerSelector, userOptions = {}) {
         this.container = document.querySelector(containerSelector);
         this.panels = document.querySelectorAll(".panel");
-        this.panelsLength = this.panels.length - 3;
+        this.panelsLength = 8; //this.panels.length - 3;
         this.prevButton = document.querySelector(userOptions.navigation.prevEl);
         this.nextButton = document.querySelector(userOptions.navigation.nextEl);
 
@@ -18,7 +18,7 @@
     };
 
     setPositionByIndex = () => {
-        this.currentTranslate = -this.currentIndex * (this.container.offsetWidth + 10); // 10은 gap /* -은 container 내부의 콘텐츠를 왼쪽으로 이동시키는 효과 */
+        this.currentTranslate = -this.currentIndex * (this.container.offsetWidth + 10); // 10은 panel 사이의 gap /* -은 container 내부의 콘텐츠를 왼쪽으로 이동시키는 효과 */
         this.prevTranslate = this.currentTranslate;
         this.updatePosition();
     };
