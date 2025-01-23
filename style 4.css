@@ -326,11 +326,11 @@ h1 {
 .header2 {
     display: flex;
     align-items: baseline;
-    justify-content: center;
+    justify-content: space-between;
     margin-top: 20px;
-    padding: 20px;
+    padding: 10px;
     background-color: #4CAF50;
-    color: white;
+    color: white/* white; */
 }
 
 .header2 button {
@@ -338,11 +338,20 @@ h1 {
     border: none;
     color: white;
     font-size: 1.5em;
-    margin-right: 20px;
-    margin-left: 20px;
+    /* margin-right: 20px; */
+    /* margin-left: 20px; */
     cursor: pointer;
     border: none;
     background: none;
+}
+
+#btn1 {
+    margin-right: 15px;
+}
+
+#btn2 {
+    margin-left: 15px;
+    margin-right: 10px;
 }
 
 .header2 span {
@@ -356,7 +365,8 @@ h1 {
 
 .stock-item {
     display: flex;
-    align-items: center;
+    flex-direction: column;
+    align-items: flex-start;
     justify-content: flex-start;
     margin-bottom: 20px;
     padding: 10px;
@@ -373,18 +383,6 @@ h1 {
     flex: 1;
     text-align: left;
     font-weight: bold;
-}
-
-.stock-item .divider {
-    width: 4px;
-    /* 세로선의 두께 */
-    padding: 0px;
-    background-color: #e0e0e0;
-    /* 세로선 색상 */
-    height: auto;
-    /* 부모 요소의 높이에 맞추기 */
-    align-self: stretch;
-    /*Flexbox 안에서 세로로 늘어나게 설정*/
 }
 
 .stock-item .info {
