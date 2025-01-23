@@ -385,7 +385,19 @@ h1 {
     font-weight: bold;
 }
 
+.company a {
+    text-decoration: none;
+    color:black;
+}
+
+.company a:hover {
+    text-decoration: underline;
+    color: #0056b3;
+}
+
 .stock-item .info {
     flex: 2;
     text-align: left;
 }
+
+
