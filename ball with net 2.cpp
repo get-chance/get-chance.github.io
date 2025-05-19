@@ -61,9 +61,9 @@ struct NetSpring {
 };
 
 struct TrapNet {
-    float x, y;
-    float tx, ty;
-    float dx, dy;
+    float x, y; // 초기값 : 플레이어에서 발사된 위치, update 되면서 마우스로 찍은 점과 일치하게 됨
+    float tx, ty; // 그물의 시작점(마우스로 찍은 점)
+    float dx, dy; // 그물이 날아가는 방향의 방향벡터(길이 : 1)
     float speed = 500.0f;
 
     float vx = 0.0f, vy = 0.0f;
@@ -80,6 +80,9 @@ struct TrapNet {
     std::vector<NetNode> nodes;
     std::vector<NetSpring> springs;
 };
+const float horizontalStep = 20.0f; //20.0f
+const float verticalStep = 30.0f;
+const float verticalDensityMultiplier = 3.0f; //3.0f
 
 std::vector<TrapNet> trapNets;
 int weaponMode = 1;  // 1: 총, 2: 그물
@@ -104,11 +107,22 @@ void drawCircle(float cx, float cy, float r, float red, float green, float blue,
 
 void drawRect(float x, float y, float width, float height, float r, float g, float b) {
     glColor3f(r, g, b);
+
     glBegin(GL_QUADS);
     glVertex2f(x, y);
     glVertex2f(x + width, y);
     glVertex2f(x + width, y + height);
     glVertex2f(x, y + height);
+    glEnd();
+
+    // 디버깅용
+    // 점 크기 설정 (선택)
+    glPointSize(5.0f);  // 점이 작아서 안 보일 수 있으므로 크기 지정
+
+    // 초록색으로 점 그리기
+    glColor3f(0.0f, 1.0f, 0.0f);  // 초록색
+    glBegin(GL_POINTS);
+    glVertex2f(x, y);         // x, y에 점 그리기
     glEnd();
 }
 
@@ -163,25 +177,7 @@ void drawTrapNet(const TrapNet& net) {
         drawCircle(net.x, net.y, 10.0f, 1.0f, 0.0f, 0.0f);  // 반지름 10짜리 빨간 공
         return;  // Flying 상태에서는 그물 확장 X
     }
-    if (net.state == TrapNetState::Falling) {
-        glColor3f(0.4f, 0.9f, 1.0f);
-        glLineWidth(1.5f);
-        glBegin(GL_LINES);
-
-        for (const auto& spring : net.springs) {
-            const NetNode& a = net.nodes[spring.a];
-            const NetNode& b = net.nodes[spring.b];
-            glVertex2f(a.x, a.y);
-            glVertex2f(b.x, b.y);
-        }
-
-        glEnd();
-    }
-    else {
-
-        float horizontalStep = 10.0f; //20.0f
-        float verticalStep = 30.0f;
-        float verticalDensityMultiplier = 3.0f; //3.0f
+    else if (net.state == TrapNetState::Expanding) {
 
         float nx = -net.dy;  // 수직벡터
         float ny = net.dx;
@@ -203,7 +199,7 @@ void drawTrapNet(const TrapNet& net) {
         glLineWidth(1.5f);
         glBegin(GL_LINES);
 
-        // 1?? 가로선 (윗변-아랫변 평행)
+        // 1 가로선 (윗변-아랫변 평행)
         float totalLen = sqrtf(net.length * net.length);  // 직선거리
         int numH = std::max(2, int(totalLen / horizontalStep));
         for (int i = 0; i <= numH; ++i) {
@@ -212,18 +208,19 @@ void drawTrapNet(const TrapNet& net) {
             float startY = (1 - t) * hy1 + t * hy3;
             float endX = (1 - t) * hx2 + t * hx4;
             float endY = (1 - t) * hy2 + t * hy4;
-            glVertex2f(startX, startY);
+            glVertex2f(startX, startY); 
             glVertex2f(endX, endY);
+            // 시작점과 끝점은 사다리꼴의 옆변에 있으며, 둘이 이었을 때 윗변, 아랫변과 평행
         }
 
-        // 2?? 세로선 (윗변~아랫변 연결)
-        float topLen = sqrtf((hx1 - hx2) * (hx1 - hx2) + (hy1 - hy2) * (hy1 - hy2));
+        // 2 세로선 (윗변~아랫변 연결)
+        float topLen = sqrtf((hx1 - hx2) * (hx1 - hx2) + (hy1 - hy2) * (hy1 - hy2)); // 마우스 클리적점과 가까운 변의 양끝 꼭짓점의 길이
         int numV = std::max(2, int((topLen / verticalStep) * verticalDensityMultiplier));  // 밀도 배수 적용
         for (int i = 0; i <= numV; ++i) {
             float s = float(i) / numV;
             float topX = (1 - s) * hx1 + s * hx2;
             float topY = (1 - s) * hy1 + s * hy2;
-            float bottomX = (1 - s) * hx3 + s * hx4;
+            float bottomX = (1 - s) * hx3 + s * hx4; // 마우스 터치한 점과 먼 변 위에 있는 점
             float bottomY = (1 - s) * hy3 + s * hy4;
             glVertex2f(topX, topY);
             glVertex2f(bottomX, bottomY);
@@ -231,6 +228,21 @@ void drawTrapNet(const TrapNet& net) {
 
         glEnd();
     }
+    else { //(net.state == TrapNetState::Falling) {
+        glColor3f(0.4f, 0.9f, 1.0f);
+        glLineWidth(1.5f);
+        glBegin(GL_LINES);
+
+        for (const auto& spring : net.springs) {
+            const NetNode& a = net.nodes[spring.a];
+            const NetNode& b = net.nodes[spring.b];
+            glVertex2f(a.x, a.y);
+            glVertex2f(b.x, b.y);
+        }
+
+        glEnd();
+    }
+    
 }
 
 void fireTrapNet(float px, float py, float mouseX, float mouseY) {
@@ -240,6 +252,7 @@ void fireTrapNet(float px, float py, float mouseX, float mouseY) {
     net.tx = mouseX;
     net.ty = mouseY;
 
+    // 그물이 발사되는 방향을 구함
     float dx = mouseX - px;
     float dy = mouseY - py;
     float len = std::sqrt(dx * dx + dy * dy);
@@ -247,7 +260,8 @@ void fireTrapNet(float px, float py, float mouseX, float mouseY) {
     net.dx = dx / len;
     net.dy = dy / len;
 
-    net.vx = net.dx * net.speed;  // <-- 추가!
+    // 그물이 발사되는 방향의 속도를 구함
+    net.vx = net.dx * net.speed;
     net.vy = net.dy * net.speed;
 
     trapNets.push_back(net);
@@ -265,23 +279,25 @@ void updateTrapNets(float deltaTime) {
         if (net.state == TrapNetState::Flying) {
             float tx = net.tx - net.x;
             float ty = net.ty - net.y;
-            float distSq = tx * tx + ty * ty;
+            float distSq = tx * tx + ty * ty; // (마우스로 찍은점과 빨간점간의 거리)의 제곱 // 계속 감소
             float moveStep = net.speed * deltaTime;
 
             if (distSq <= moveStep * moveStep) {
                 net.x = net.tx;
                 net.y = net.ty;
-                net.state = TrapNetState::Expanding;
+                net.state = TrapNetState::Expanding; // 마우스로 찍은 점의 위치와 동일하거나 넘어서면 상태변경
             }
             else {
+                // 그물(빨간점)의 현재 위치 업데이트
                 net.x += net.dx * moveStep;
                 net.y += net.dy * moveStep;
             }
         }
         else if (net.state == TrapNetState::Expanding) {
-            net.length += net.growSpeed * deltaTime;
+            net.length += net.growSpeed * deltaTime; // 펼쳐짐을 update. 그리는 것은 updateTrapNet에서.
             if (net.length >= net.maxLength) {
                 net.length = net.maxLength;
+
                 initializeTrapNetMesh(net);
                 net.state = TrapNetState::Falling;
             }
@@ -293,26 +309,28 @@ void updateTrapNets(float deltaTime) {
 }
 
 void initializeTrapNetMesh(TrapNet& net) {
-    const float horizontalStep = 20.0f;
-    const float verticalStep = 30.0f;
-    const float verticalDensityMultiplier = 3.0f;
 
-    float nx = -net.dy;
-    float ny = net.dx;
+    float nx = -net.dy; // (dx, dy)는 전방 방향
+    float ny = net.dx; // (nx, ny)는 dx, dy를 왼쪽으로 90도 회전시킨 수직 벡터
+    // 사다리꼴의 **폭(가로 방향)**을 만들기 위해 쓰인다
 
-    float hx1 = net.x + nx * net.widthBase * 0.5f;
-    float hy1 = net.y + ny * net.widthBase * 0.5f;
-    float hx2 = net.x - nx * net.widthBase * 0.5f;
+    float hx1 = net.x + nx * net.widthBase * 0.5f; // 펼쳐지기 시작한 점과 가까운 사다리꼴의 변
+    float hy1 = net.y + ny * net.widthBase * 0.5f; // 의 끝 좌표
+    float hx2 = net.x - nx * net.widthBase * 0.5f; //
     float hy2 = net.y - ny * net.widthBase * 0.5f;
+
     float tx = net.x + net.dx * net.length;
     float ty = net.y + net.dy * net.length;
-    float hx3 = tx + nx * net.widthTop * 0.5f;
-    float hy3 = ty + ny * net.widthTop * 0.5f;
+    float hx3 = tx + nx * net.widthTop * 0.5f; // 펼쳐지기 시작한 점과 먼 사다리꼴의 변
+    float hy3 = ty + ny * net.widthTop * 0.5f; // 의 끝 좌표
     float hx4 = tx - nx * net.widthTop * 0.5f;
     float hy4 = ty - ny * net.widthTop * 0.5f;
 
+    // 1 사다리꼴을 세로로 나누는 수 = 가로선 (윗변-아랫변 평행)의 개수 : numH
     float totalLen = sqrtf(net.length * net.length);
     int numH = std::max(2, int(totalLen / horizontalStep));
+
+    // 2 사다리꼴을 가로로 나누는 수 = 세로선 (윗변~아랫변 연결)의 개수 : numV
     float topLen = sqrtf((hx1 - hx2) * (hx1 - hx2) + (hy1 - hy2) * (hy1 - hy2));
     int numV = std::max(2, int((topLen / verticalStep) * verticalDensityMultiplier));
 
@@ -320,19 +338,28 @@ void initializeTrapNetMesh(TrapNet& net) {
     net.springs.clear();
 
     for (int v = 0; v <= numV; ++v) {
-        float s = float(v) / numV;
-        float topX = (1 - s) * hx1 + s * hx2;
+        // 윗변과 아랫변 사이에서 수직선을 하나 선택
+        // 밖 for문은 각 세로줄 마다
+        // (topX, topY) = (hx1, hy1) ~ (hx2, hy2) 양 끝점 포함
+        // (bottomX, bottomY) = (hx/3, hy3) ~ (hx4, hy4) 양 끝점 포함
+        float s = float(v) / numV; // s는 0.0부터 1.0까지 선형보간 인자
+        float topX = (1 - s) * hx1 + s * hx2; // topX, topY: 윗변 위의 위치 (왼쪽 → 오른쪽)
         float topY = (1 - s) * hy1 + s * hy2;
-        float bottomX = (1 - s) * hx3 + s * hx4;
+        float bottomX = (1 - s) * hx3 + s * hx4; // bottomX, bottomY: 아랫변 위의 대응 위치
         float bottomY = (1 - s) * hy3 + s * hy4;
 
         for (int h = 0; h <= numH; ++h) {
-            float t = float(h) / numH;
+            // 해당 세로선 위에서 위→아래 방향으로 점들을 찍음
+            // 안 for문은 각 세로줄 위의 "가로줄 점"들 계산
+            // (x, y) = (hx1, hy1) ~ (hx3, hy3) 위 아래로 양 끝점 포함
+            float t = float(h) / numH; // t도 보간 인자 (0.0 ~ 1.0)
             float x = (1 - t) * topX + t * bottomX;
             float y = (1 - t) * topY + t * bottomY;
-            net.nodes.push_back({ x, y, net.vx, net.vy });
+            net.nodes.push_back({ x, y, net.vx, net.vy }); // 위쪽부터 아래쪽까지 점을 찍으며, net.nodes에 추가
         }
     }
+    // 사다리꼴 내부에(numV + 1)×(numH + 1) 개의 노드가 만들어짐
+    size_t count = net.nodes.size();
 
     auto nodeIndex = [&](int v, int h) { return v * (numH + 1) + h; };
 
@@ -351,12 +378,15 @@ void initializeTrapNetMesh(TrapNet& net) {
                 float dy = net.nodes[idx].y - net.nodes[down].y;
                 net.springs.push_back({ idx, down, sqrtf(dx * dx + dy * dy) });
             }
+
+            /*
             if (h < numH && v < numV) {
                 int diag = nodeIndex(v + 1, h + 1);
                 float dx = net.nodes[idx].x - net.nodes[diag].x;
                 float dy = net.nodes[idx].y - net.nodes[diag].y;
                 net.springs.push_back({ idx, diag, sqrtf(dx * dx + dy * dy) });
             }
+            */
         }
     }
 }
@@ -518,6 +548,8 @@ int main() {
                 }
             }
 
+            updateTrapNets(deltaTime);
+
             for (auto& bullet : bullets) {
                 if (bullet.active) {
                     bullet.x += bullet.vx * deltaTime;
@@ -526,8 +558,6 @@ int main() {
                         bullet.active = false;
                 }
             }
-
-            updateTrapNets(deltaTime);
 
             for (auto& bullet : bullets) {
                 if (!bullet.active) continue;
